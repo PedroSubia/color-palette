@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ColorPalettesContext } from '../../context/ColorPalettesContext';
 import './PaletteDisplay.css';
-//import TagDisplay from './TagDisplay';
+import TagDisplay from './TagDisplay';
 
 const PaletteDisplay = () => {
   const { id } = useParams();
@@ -29,8 +29,7 @@ const PaletteDisplay = () => {
         <div className='tag-d-container'>
         {
           palette.tags.map((tag, index) => 
-            <h1 />
-            // <TagDisplay key={index} tag={tag} />
+            <TagDisplay key={index} tag={tag} />
           )
         }
         </div>
