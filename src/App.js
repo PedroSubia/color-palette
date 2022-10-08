@@ -1,43 +1,37 @@
-import { useEffect, useState } from 'react';
 import './App.css';
-import Tags from './components/Tags/Tags';
-import Palettes from './components/Palette/Palettes';
-import Favorites from './components/Favorite/Favorites';
-import { getColorPalettes, getTags } from './service';
-import { FavoritesContext } from './context/FavoriteContext';
+import {Routes, Route} from 'react-router-dom'
+import Home from './routes/Home/Home';
+import PaletteDisplay from './routes/Palette/PaletteDisplay';
+import { useContext, useEffect } from 'react';
+import { getColorPalettes } from './service';
+import { ColorPalettesContext} from './context/ColorPalettesContext'
+import Navigation from './routes/Navigation/Navigation';
+import Login from './routes/Login/Login';
+import PaletteCreation from './routes/Palette/PaletteCreation';
 
 function App() {
 
-  const [colorPalettes, setColorPalettes] = useState([])
-  const [tags, setTags ] = useState([])
-  const [favorites, setFavorites] = useState([]);
+  const { setColorPalettes } = useContext(ColorPalettesContext)
 
-  useEffect( () => {
+  useEffect(()=> {
     getColorPalettes()
     .then((data) => {
       setColorPalettes(data);
-      setFavorites((data) => data.filter((palette) => palette.liked));
     })
-    .catch(err => console.log(err))
-
-    getTags()
-    .then((data) => setTags(data))
     .catch((err) => console.log(err));
-  }, []); 
+  }, [])
 
   return (
-    <FavoritesContext.Provider value={{favorites, setFavorites}}>
-      <div className="App">
-          <header>
-            <h1>Color Palette Project</h1>
-          </header>
-          <div className='main-container'>
-            <Tags tags={tags} />
-            <Palettes palettes={colorPalettes} />
-            <Favorites favorites={favorites} />
-          </div>
+      <div className='App'>
+          <Routes>
+            <Route path='/' element={<Navigation/>}>
+              <Route index element={<Home/>}/>
+              <Route path='login' element={<Login/>}/>
+              <Route path='palette/:id' element={<PaletteDisplay/>}/>
+              <Route path='palette/create' element={<PaletteCreation/>}/>
+            </Route>
+          </Routes>
       </div>
-    </FavoritesContext.Provider>
   );
 }
 
